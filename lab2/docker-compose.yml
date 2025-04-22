@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  vulnerable:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: vulnerable
+    ports:
+      - "8080:8080"
+    networks:
+      - web3-security-network
+    restart: unless-stopped
+
+  fixed:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: fixed
+    ports:
+      - "8081:8080"
+    networks:
+      - web3-security-network
+    restart: unless-stopped
+
+  # Simulated internal service for demonstration purposes
+  internal-service:
+    image: nginx:alpine
+    volumes:
+      - ./internal-service:/usr/share/nginx/html:ro
+    networks:
+      - web3-security-network
+    restart: unless-stopped
+
+networks:
+  web3-security-network:
+    driver: bridge

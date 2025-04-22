@@ -1,0 +1,59 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    volumes:
+      - ./lab1:/app/lab1
+      - ./lab2:/app/lab2
+    networks:
+      - web3_security_network
+
+  lab1_vulnerable:
+    build:
+      context: .
+      dockerfile: lab1/vulnerable/Dockerfile
+    ports:
+      - "5001:5000"
+    restart: unless-stopped
+    networks:
+      - web3_security_network
+
+  lab1_fixed:
+    build:
+      context: .
+      dockerfile: lab1/fixed/Dockerfile
+    ports:
+      - "5002:5000"
+    restart: unless-stopped
+    networks:
+      - web3_security_network
+
+  lab2_vulnerable:
+    build:
+      context: .
+      dockerfile: lab2/vulnerable/Dockerfile
+    ports:
+      - "5003:5000"
+    restart: unless-stopped
+    networks:
+      - web3_security_network
+
+  lab2_fixed:
+    build:
+      context: .
+      dockerfile: lab2/fixed/Dockerfile
+    ports:
+      - "5004:5000"
+    restart: unless-stopped
+    networks:
+      - web3_security_network
+
+networks:
+  web3_security_network:
+    driver: bridge
